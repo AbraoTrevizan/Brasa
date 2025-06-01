@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BRASA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body, html {
+      height: 100%;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      color: #2e7d32;
+      scroll-behavior: smooth;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: #1b5e20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      color: white;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+    nav .brand {
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+    }
+    nav .menu-button {
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    nav .menu-dropdown {
+      position: absolute;
+      top: 64px;
+      right: 24px;
+      background: white;
+      color: #1b5e20;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      display: none;
+      flex-direction: column;
+      width: 180px;
+    }
+    nav .menu-dropdown a {
+      padding: 14px 20px;
+      text-decoration: none;
+      color: #1b5e20;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    nav .menu-dropdown a:last-child {
+      border-bottom: none;
+    }
+    nav .menu-dropdown.active {
+      display: flex;
+    }
+
+    #top-image-container {
+      margin-top: 64px;
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      position: relative;
+    }
+    #top-image {
+      width: 100%;
+      height: 100%;
+      background-image: url('jjl.png');
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.7);
+    }
+    #top-bar {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(27, 94, 32, 0.85);
+      padding: 10px 24px;
+      border-radius: 32px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-align: center;
+    }
+
+    #button-section {
+      max-width: 600px;
+      margin: 48px auto 24px;
+      padding: 24px 32px;
+      background: #2e7d32;
+      border-radius: 24px;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    #button-section button {
+      background-color: #a5d6a7;
+      color: #1b5e20;
+      border: none;
+      border-radius: 16px;
+      padding: 14px 48px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #button-section button:hover {
+      background-color: #81c784;
+    }
+    #button-section .text-left {
+      font-size: 1.25rem;
+      font-weight: 600;
+      max-width: 70%;
+    }
+
+    #text-section {
+      max-width: 900px;
+      margin: 40px auto 64px;
+      padding: 32px 36px;
+      background: #dcedc8;
+      border-radius: 24px;
+      box-shadow: 2px 2px 12px rgba(46,125,50,0.2);
+      color: #1b5e20;
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      text-align: justify;
+    }
+    #text-section h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      font-weight: 900;
+      color: #1b5e20;
+      text-align: center;
+    }
+    #text-section .content-wrapper {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    #text-section .content-wrapper .text {
+      flex: 1 1 400px;
+      min-width: 280px;
+    }
+    #text-section .content-wrapper .image {
+      flex: 1 1 280px;
+      min-width: 250px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    #text-section .content-wrapper .image img {
+      max-width: 100%;
+      border-radius: 16px;
+      box-shadow: 2px 2px 10px rgba(46,125,50,0.3);
+    }
+
+    #cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin: 64px auto;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #4caf50, #388e3c);
+      padding: 28px 24px;
+      border-radius: 24px;
+      box-shadow:
+        4px 4px 10px rgba(0, 0, 0, 0.2),
+        -4px -4px 12px rgba(97, 190, 95, 0.7);
+      text-align: center;
+      width: 280px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card:hover {
+      transform: translateY(-16px) scale(1.08);
+      box-shadow:
+        6px 12px 26px rgba(0, 0, 0, 0.35),
+        -6px -6px 18px rgba(97, 190, 95, 0.85);
+    }
+    .card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 4px solid #a5d6a7;
+      margin-bottom: 22px;
+      background-color: white;
+      padding: 4px;
+    }
+    .card h3 {
+      margin: 14px 0 12px;
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+    .card p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    #cultura {
+      margin: 64px auto;
+      padding: 32px 24px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    }
+    #cultura h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1b5e20;
+      margin-bottom: 24px;
+    }
+    #cultura p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 900px;
+      margin: 0 auto 24px;
+      color: #2e7d32;
+    }
+    #cultura ul {
+      max-width: 800px;
+      margin: 0 auto;
+      padding-left: 20px;
+      color: #2e7d32;
+    }
+    #cultura ul li {
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    footer {
+      background-color: #1b5e20;
+      color: white;
+      text-align: center;
+      padding: 24px 16px;
+      margin-top: 64px;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      #cards-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 90%;
+        max-width: 400px;
+      }
+      #text-section .content-wrapper {
+        flex-direction: column;
+      }
+      #text-section .content-wrapper .image {
+        justify-content: center;
+        margin-top: 20px;
+      }
+    }
+
+footer p:last-child a {
+  color: white !important;
+}
+
+footer p:last-child a:hover {
+  text-decoration: underline;
+}
+
+
+#button-section {
+  max-width: 800px;
+  margin: 48px auto 24px;
+  padding: 24px 32px;
+  background: #2e7d32;
+  border-radius: 24px;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap; 
+  color: white;
+}
+
+#button-section .text-left {
+  font-size: 1.25rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 200px;
+  max-width: 500px;
+}
+
+#button-section button {
+  background-color: #a5d6a7;
+  color: #1b5e20;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 32px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+footer {
+  font-size: 1rem;   
+  font-weight: 700;  
+}
+
+
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="brand">BRASA</div>
+    <button class="menu-button" aria-label="Menu">&#9776;</button>
+    <div class="menu-dropdown" role="menu" aria-hidden="true">
+      <a href="eventos.html">Aconteceu</a>
+    </div>
+  </nav>
+
+  <div id="top-image-container">
+    <div id="top-image"></div>
+    <div id="top-bar">Associação Brasileira de Fornecedores Toyota do Brasil</div>
+  </div>
+
+  <section id="button-section">
+    <div class="text-left">Quer fazer parte da BRASA? Clique no botão para se cadastrar:</div>
+    <button>Cadastrar-se</button>
+  </section>
+
+  <section id="text-section">
+    <h2>Evoluindo a cada dia!</h2>
+    <div class="content-wrapper">
+      <div class="text">
+        <p>
+          Fundada em 2006, a BRASA é uma associação de fornecedores de peças e sistemas automotivos originais para as linhas de montagem de veículos da Toyota do Brasil Ltda.
+<p style="margin-bottom: 20px;"></p>
+
+Ao longo dos anos a BRASA buscou a melhoria nos processos das empresas associadas, contando sempre com a forte atuação da equipe da Toyota do Brasil.
+<p style="margin-bottom: 20px;"></p>
+
+Com isso, a cada ano o número de colaboradores e empresas participantes das atividades tem aumentado a cada ano, bem como a qualidade dos trabalhos apresentados.
+<p style="margin-bottom: 20px;"></p>
+
+Hoje, as empresas associadas desejam cada vez mais se aprofundar no conhecimento “Toyota Way”.
+        </p>
+      </div>
+      <div class="image">
+        <img src="certox.png" alt="BRASA">
+      </div>
+    </div>
+  </section>
+
+  <section id="cards-container">
+    <div class="card">
+      <img src="1certooox.png" alt="Serviço 1">
+      <h3>Contribuinte</h3>
+      <p>Ser reconhecida como contribuinte para o desenvolvimento contínuo da atividade da indústria;</p>
+    </div>
+    <div class="card">
+      <img src="3certoxs.png" alt="Serviço 2">
+      <h3>Comunicadora</h3>
+      <p>Reforçar a comunicação e O relacionamento baseado na confiança mútua entre Toyota e fornecedores;</p>
+    </div>
+    <div class="card">
+      <img src="3certo.png" alt="Serviço 3">
+      <h3>Fortalecedora</h3>
+      <p>Fortalecer a base de fornecedores Toyota do Brasil, visando ganhos em produtividade.</p>
+    </div>
+  </section>
+
+  <section id="cultura">
+    <h2>Cultura e Valores</h2>
+    <p>Nossa cultura organizacional e nossos valores são fundamentais para o funcionamento eficaz das atividades e a realização dos objetivos. Com isso, defendemos os interesses dos associados. Confira abaixo:</p>
+    <ul>
+      <li>Respeito às pessoas e ao meio ambiente</li>
+      <li>Busca incessante pela melhoria contínua (Kaizen)</li>
+      <li>Colaboração e transparência com parceiros</li>
+    </ul>
+  </section>
+
+ <footer>
+  <p>BRASA © 2025. Todos os direitos reservados.</p>
+  <p><a href="contato.html">Contato</a> | <a href="saibamais.html">Saiba Mais</a></p>
+</footer>
+
+  <script>
+    const menuButton = document.querySelector('.menu-button');
+    const menuDropdown = document.querySelector('.menu-dropdown');
+
+    menuButton.addEventListener('click', () => {
+      menuDropdown.classList.toggle('active');
+    });
+
+
+    document.querySelectorAll('.menu-dropdown a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuDropdown.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

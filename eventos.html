@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Eventos BRASA</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    color: #2e7d32;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background-color: #1b5e20;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+  }
+
+  nav .brand {
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+
+  nav .menu-button {
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  nav .menu-dropdown {
+    position: fixed;
+    top: 64px;
+    right: 20px;
+    background: white;
+    color: #1b5e20;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    width: 180px;
+  }
+
+  nav .menu-dropdown a {
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #1b5e20;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  nav .menu-dropdown a:last-child {
+    border-bottom: none;
+  }
+
+  nav .menu-dropdown.active {
+    display: flex;
+  }
+
+  main {
+    margin-top: 80px; 
+    max-width: 900px;
+    width: 100%;
+    padding: 0 20px 100px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-grow: 1;
+  }
+
+  header#home {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #1b5e20;
+  }
+
+  .video-container {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  
+  .card {
+    background-color: white;
+    border-left: 6px solid #2e7d32;
+    border-radius: 10px;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.12);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+    position: relative;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    padding-bottom: 60px; 
+  }
+
+  .card:hover {
+    box-shadow: 0 12px 24px rgba(46, 125, 50, 0.35);
+    transform: translateY(-6px);
+  }
+
+  .card img {
+    width: 220px;
+    height: 180px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: 0 10px 10px 0;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.07);
+  }
+
+  .card-content {
+    padding: 1.3rem 1.5rem 1.5rem; 
+    flex-grow: 1;
+  }
+
+  .card-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+    color: #2e7d32;
+  }
+
+  .card-date {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.8rem;
+  }
+
+  .card-description {
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #444;
+  }
+
+  .btn-view-image {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #2e7d32, #1b4d20);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+  }
+
+  .btn-view-image:hover {
+    background: linear-gradient(135deg, #1b4d20, #2e7d32);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.7);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+
+  .modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+ footer {
+  background-color: #1b5e20;
+  color: white;
+  text-align: center;
+  padding: 24px 16px;
+  margin-top: 64px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+footer p:last-child a {
+  color: white !important;
+}
+
+footer p:last-child a:hover {
+  text-decoration: underline;
+}
+
+
+
+  @media (max-width: 700px) {
+    .card {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: 80px; 
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .btn-view-image {
+      position: static;
+      margin: 15px auto 20px auto;
+      transform: none;
+      width: 90%;
+      border-radius: 10px;
+      display: block;
+      text-align: center;
+      z-index: 10;
+    }
+  }
+  
+footer {
+  background-color: #1b5e20;
+  color: white;
+  text-align: center;
+  padding: 24px 16px;
+  margin-top: 64px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  font-size: 1rem;
+  font-weight: 700; 
+}
+
+footer {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+footer p {
+  margin: 2px 0;
+  line-height: 1.2;
+}
+
+footer {
+  font-size: 1rem;   
+  font-weight: 700;  
+}
+
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">BRASA</div>
+  <button class="menu-button" aria-label="Menu">&#9776;</button>
+  <div id="menuDropdown" class="menu-dropdown">
+    <a href="index.html">Home</a>
+  </div>
+</nav>
+
+<main>
+  <header id="home">Aconteceu</header>
+
+  <div class="video-container">
+    <video autoplay muted loop playsinline>
+      <source src="2.mp4" type="video/mp4" />
+      Seu navegador não suporta o elemento de vídeo.
+    </video>
+  </div>
+
+ 
+  <div class="card">
+    <img src="2.png" alt="Descrição da imagem" />
+    <div class="card-content">
+      <div class="card-title">ESG! Fornecedores Toyota do Brasil e Toyota Argentina</div>
+      <div class="card-date">Data do evento: 28/05/2024</div>
+      <div class="card-description">
+        Para quem se preocupa com o meio ambiente, adotar uma agenda ESG é uma boa forma de acompanhar as práticas de governança e sustentabilidade de uma empresa, verificando se os valores que ela defende e prática correspondem aos seus! Realizado evento online do programa ESG com os fornecedores associados BRASA (Toyota do Brasil) e da APTA (Toyota da Argentina) no dia 28 de maio contando com 105 participantes.
+      </div>
+      <button class="btn-view-image" onclick="openModal('2.png')">Ver imagem</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="3.png" alt="Descrição da imagem" />
+    <div class="card-content">
+      <div class="card-title">COMITÊ CYBERSECURITY!</div>
+      <div class="card-date">Data do evento:  23/05/2024</div>
+      <div class="card-description">
+        O novo comitê BRASA – Cybersecurity e a Toyota do Brasil Ltda realizaram o 1º Workshop trazendo empresas do ramo de segurança cibernética e segurança da informação. Neste primeiro encontro presencial foi apresentado um panorama do cenário geral para a indústria automobilística, envolvendo montadoras e fornecedores, destacando os riscos cibernéticos em terceiros e as iniciativas para equalização e mitigação. Ocorrido no dia 23 de maio com a presença de 90 participantes representando 55 empresas Associadas.
+      </div>
+      <button class="btn-view-image" onclick="openModal('3.png')">Ver imagem</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="4.png" alt="Descrição da imagem" />
+    <div class="card-content">
+      <div class="card-title">PLANT TOUR RH – ROBERT BOSCH!</div>
+      <div class="card-date">Data do evento: 22/05/2024</div>
+      <div class="card-description">
+        Realizado Plant Tour na empresa Robert Bosch no dia 22 de maio! A empresa associada Robert Boch Ltda trouxe as temáticas de Saúde, Segurança, Formação de Aprendizes, integridade de Diversidade, Equidade e Inclusão, e Indústria 4.0!
+<p style="margin-bottom: 20px;"></p>
+Uma grande oportunidade aos 39 profissionais da área!
+      </div>
+      <button class="btn-view-image" onclick="openModal('4.png')">Ver imagem</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>BRASA © 2025. Todos os direitos reservados.</p>
+  <p><a href="contato.html">Contato</a> | <a href="saibamais.html">Saiba Mais</a></p>
+</footer>
+
+
+<div id="modal" class="modal" onclick="closeModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <img id="modalImage" src="" alt="Imagem ampliada" />
+  </div>
+</div>
+
+<script>
+
+  const menuButton = document.querySelector('.menu-button');
+  const menuDropdown = document.getElementById('menuDropdown');
+
+  menuButton.addEventListener('click', () => {
+    menuDropdown.classList.toggle('active');
+  });
+
+ 
+  function openModal(src) {
+    const modal = document.getElementById('modal');
+    const modalImage = document.getElementById('modalImage');
+    modalImage.src = src;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; 
+  }
+
+  function closeModal(event) {
+    const modal = document.getElementById('modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; 
+   
+    const modalImage = document.getElementById('modalImage');
+    modalImage.src = '';
+  }
+
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+</script>
+
+</body>
+</html>
